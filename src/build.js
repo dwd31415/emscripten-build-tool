@@ -81,6 +81,7 @@ function main()
              command += projectInfo.directory + listOfSrcFiles[numberOfFile];
          }
          if (!fs.exists(projectInfo.directory + projectInfo.outputDirectory)) {
+             console.log(!fs.exists(projectInfo.directory + projectInfo.outputDirectory));
              fs.mkdirSync(projectInfo.directory + projectInfo.outputDirectory);
          }
          command += " -o " + projectInfo.directory + projectInfo.outputDirectory + "/" + projectInfo.name + ".html";
