@@ -24,7 +24,15 @@ THE SOFTWARE.
 */
 
 var fs = require('fs');
-var parser = require('./parser.js');
+var exec = require('child_process').exec;
+var project = require('./parser.js').project;
+var parseFile = require('./parser.js').parseFile;
+
+if (typeof String.prototype.endsWith !== 'function') {
+    String.prototype.endsWith = function (suffix) {
+        return this.indexOf(suffix, this.length - suffix.length) !== -1;
+    };
+}
 
 var build = 0.1;
 
@@ -40,17 +48,45 @@ function main()
         console.log("You must specify a project build file. For more information please visit emscripten-build-tool.github.io");
     }
     else {
-        console.log(projectFileName);
-        fs.readFile(projectFileName, function (err, data) {
-            if (err) {
-                console.log("The specefied file could not be opened or does not exist!");
-                return;
-            }
-            var lines = data.toString().split("\n");
-            projectInfo = parser.parseFile(lines);
-        });
-        //console.log("Building " + projectInfo.name);
-        
+         var data = fs.readFileSync(projectFileName,encoding="utf-8");
+         if (!data)
+         {
+             console.log("The project build file is not existing or can not be opened. For more information please visit emscripten-build-tool.github.io");
+             return;
+         }
+         var lines = data.toString().split("\n");
+         projectInfo = parseFile(projectFileName,lines);
+         console.log("Building " + projectInfo.name);
+         var listOfSrcFiles = [];
+         for (index in projectInfo.src)
+         {
+             var files = fs.readdirSync(projectInfo.directory+projectInfo.src[index]);
+             for(fileNr in files)
+             {
+                 if (files[fileNr].endsWith(projectInfo.srcSuffix)) {
+                         listOfSrcFiles.push(projectInfo.src[index]+"/"+files[fileNr]);
+                 }
+             }
+         }
+         var command = "";
+         if(projectInfo.typeOfSrc == "C++11")
+         {
+             command += "em++ ";
+         }
+         if (projectInfo.typeOfSrc == "C99") {
+             command += "emcc ";
+         }
+         for(numberOfFile in listOfSrcFiles)
+         {
+             command += projectInfo.directory + listOfSrcFiles[numberOfFile];
+         }
+         console.log(command);
+         exec(command, function (error, stdout, stderr) {
+             console.log(stdout);
+             console.log(stderr);
+             if (error)
+                 console.log(error);
+         });
     }
 }
 

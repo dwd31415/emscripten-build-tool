@@ -23,35 +23,40 @@ THE SOFTWARE.
 
 */
 
-var project = {
-    name: "",
-    directory: "",
-    outputDirectory: "",
-    src: [],
-    srcSuffix: ".c",
-    typeOfSrc: "C99",
-    arguments: ""
-};
+var path = require("path");
 
-function parseFile(lines)
+var project= {
+name: "",
+    directory: "",
+outputDirectory: "",
+src: [],
+srcSuffix: "c",
+typeOfSrc: "C99",
+arguments: ""
+};
+module, exports.project = project;
+
+module.exports.parseFile = function parseFile(fileName,lines)
 {
     var _project = Object.create(project);
+    _project.directory = path.dirname(fileName) + "/";
     for (lineNr in lines) {
-        var line = lines[lineNr];
-        if(line.substring(0,5) == "Name:")
+        if(lines[lineNr].substring(0,5) == "Name:")
         {
-            _project.name = line.replace("Name:", "");
+            _project.name = lines[lineNr].replace("Name:", "");
         }
-        if (line.substring(0, 10) == "SrcSuffix:") {
-            _project.srcSuffix = line.replace("SrcSuffix:", "");
+        if (lines[lineNr] == "IsC++:True") {
+            _project.typeOfSrc = "C++11";
+            console.log("2");
+           _project.srcSuffix = "cpp";
         }
-        if (line.substring(0,13) == "UseSrcFolder:")
+        if (lines[lineNr].substring(0,13) == "UseSrcFolder:")
         {
-            _project.src.push(line.replace("UseSrcFolder:", ""));
+            _project.src.push(lines[lineNr].replace("UseSrcFolder:", ""));
         }
-        if (line.substring(0, 13) == "OutputFolder:") {
-            _project.outputDirectory = line.replace("OutputFolder:", "");
+        if (lines[lineNr].substring(0, 13) == "OutputFolder:") {
+            _project.outputDirectory = lines[lineNr].replace("OutputFolder:", "");
         }
-        console.log('line');
     }
+    return _project;
 }
