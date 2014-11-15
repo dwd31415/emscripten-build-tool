@@ -23,35 +23,35 @@ THE SOFTWARE.
 
 */
 
-var fs = require('fs');
-var parser = require('./parser.js');
+var project = {
+    name: "",
+    directory: "",
+    outputDirectory: "",
+    src: [],
+    srcSuffix: ".c",
+    typeOfSrc: "C99",
+    arguments: ""
+};
 
-var build = 0.1;
-
-//Holds all relevant details about the project
-var projectInfo;
-
-function main()
+function parseFile(lines)
 {
-    console.log("Emscripten Build Tool by Adrian Dawid. Build:" + build);
-    var projectFileName;
-    projectFileName = process.argv[2];
-    if (!projectFileName) {
-        console.log("You must specify a project build file. For more information please visit emscripten-build-tool.github.io");
-    }
-    else {
-        console.log(projectFileName);
-        fs.readFile(projectFileName, function (err, data) {
-            if (err) {
-                console.log("The specefied file could not be opened or does not exist!");
-                return;
-            }
-            var lines = data.toString().split("\n");
-            projectInfo = parser.parseFile(lines);
-        });
-        //console.log("Building " + projectInfo.name);
-        
+    var _project = Object.create(project);
+    for (lineNr in lines) {
+        var line = lines[lineNr];
+        if(line.substring(0,5) == "Name:")
+        {
+            _project.name = line.replace("Name:", "");
+        }
+        if (line.substring(0, 10) == "SrcSuffix:") {
+            _project.srcSuffix = line.replace("SrcSuffix:", "");
+        }
+        if (line.substring(0,13) == "UseSrcFolder:")
+        {
+            _project.src.push(line.replace("UseSrcFolder:", ""));
+        }
+        if (line.substring(0, 13) == "OutputFolder:") {
+            _project.outputDirectory = line.replace("OutputFolder:", "");
+        }
+        console.log('line');
     }
 }
-
-main();
