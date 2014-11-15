@@ -27,8 +27,8 @@ var path = require("path");
 
 var project= {
 name: "",
-    directory: "",
-outputDirectory: "",
+directory: "",
+outputDirectory: "html",
 src: [],
 srcSuffix: "c",
 typeOfSrc: "C99",
@@ -45,9 +45,8 @@ module.exports.parseFile = function parseFile(fileName,lines)
         {
             _project.name = lines[lineNr].replace("Name:", "");
         }
-        if (lines[lineNr] == "IsC++:True") {
+        if (lines[lineNr].indexOf("IsC++:True") == 0) {
             _project.typeOfSrc = "C++11";
-            console.log("2");
            _project.srcSuffix = "cpp";
         }
         if (lines[lineNr].substring(0,13) == "UseSrcFolder:")

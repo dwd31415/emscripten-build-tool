@@ -80,6 +80,10 @@ function main()
          {
              command += projectInfo.directory + listOfSrcFiles[numberOfFile];
          }
+         if (!fs.exists(projectInfo.directory + projectInfo.outputDirectory)) {
+             fs.mkdirSync(projectInfo.directory + projectInfo.outputDirectory);
+         }
+         command += " -o " + projectInfo.directory + projectInfo.outputDirectory + "/" + projectInfo.name + ".html";
          console.log(command);
          exec(command, function (error, stdout, stderr) {
              console.log(stdout);
