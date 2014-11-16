@@ -1,0 +1,7 @@
+Name:Greeter
+IsC++:True
+IsLibrary:True
+AdditionalCompilerFlags:-std=c++11
+UseIncludeFolder:include
+UseSrcFolder:implementation
+OutputFolder:libs

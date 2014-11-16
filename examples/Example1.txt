@@ -3,4 +3,4 @@ IsC++:True
 AdditionalCompilerFlags:-std=c++11
 UseIncludeFolder:include
 UseSrcFolder:src
-UseSrcFolder:implementation
+UseLocalLibrary:libs/Greeter.bc

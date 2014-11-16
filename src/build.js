@@ -35,7 +35,7 @@ if (typeof String.prototype.endsWith !== 'function') {
     };
 }
 
-var build = 0.5;
+var build = 0.8;
 
 //Holds all relevant details about the project
 var projectInfo;
@@ -89,7 +89,7 @@ function main()
              fs.mkdirSync(projectInfo.directory + projectInfo.outputDirectory);
          }
          command += projectInfo.arguments;
-         command += " -o " + projectInfo.directory + projectInfo.outputDirectory + "/" + projectInfo.name + ".html";
+         command += " -o " + projectInfo.directory + projectInfo.outputDirectory + "/" + projectInfo.name + ( projectInfo.isLibrary ? ".bc" : ".html");
          console.log("\n");
          console.log("*************************************************");
          console.log("Building " + projectInfo.name);
@@ -109,7 +109,7 @@ function main()
              }
              else
              {
-                 if(process.argv[3])
+                 if(process.argv[3] && !projectInfo.isLibrary)
                  {
                      if(process.argv[3].replace(" ","") == "-run")
                      {

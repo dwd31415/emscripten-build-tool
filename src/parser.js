@@ -32,7 +32,8 @@ outputDirectory: "html",
 src: [],
 srcSuffix: "c",
 typeOfSrc: "C99",
-arguments: ""
+arguments: "",
+isLibrary: false
 };
 module, exports.project = project;
 
@@ -60,8 +61,14 @@ module.exports.parseFile = function parseFile(fileName,lines)
             else if (lines[lineNr].substring(0, 11) == "UseSrcFile:") {
                 _project.src.push(lines[lineNr].replace("UseSrcFile:", ""));
             }
+            else if (lines[lineNr].indexOf("UseLocalLibrary:") == 0) {
+                _project.src.push(lines[lineNr].replace("UseLocalLibrary:", ""));
+            }
             else if (lines[lineNr].substring(0, 13) == "OutputFolder:") {
                 _project.outputDirectory = lines[lineNr].replace("OutputFolder:", "");
+            }
+            else if (lines[lineNr] == "IsLibrary:True") {
+                _project.isLibrary = true;
             }
             else if (lines[lineNr].substring(0, 24) == "AdditionalCompilerFlags:") {
                 _project.arguments = lines[lineNr].replace("AdditionalCompilerFlags:", " ");
