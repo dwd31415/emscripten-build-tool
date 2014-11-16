@@ -56,16 +56,19 @@ function main()
          }
          var lines = data.toString().split("\n");
          projectInfo = parseFile(projectFileName,lines);
-         console.log("Building " + projectInfo.name);
          var listOfSrcFiles = [];
          for (index in projectInfo.src)
          {
-             var files = fs.readdirSync(projectInfo.directory+projectInfo.src[index]);
-             for(fileNr in files)
-             {
-                 if (files[fileNr].endsWith(projectInfo.srcSuffix)) {
-                         listOfSrcFiles.push(projectInfo.src[index]+"/"+files[fileNr]);
+             if (fs.lstatSync(projectInfo.directory + projectInfo.src[index]).isDirectory()) {
+                 var files = fs.readdirSync(projectInfo.directory + projectInfo.src[index]);
+                 for (fileNr in files) {
+                     if (files[fileNr].endsWith(projectInfo.srcSuffix)) {
+                         listOfSrcFiles.push(projectInfo.src[index] + "/" + files[fileNr]);
+                     }
                  }
+             }
+             else {
+                 listOfSrcFiles.push(projectInfo.src[index]);
              }
          }
          var command = "";
@@ -81,11 +84,19 @@ function main()
              command += projectInfo.directory + listOfSrcFiles[numberOfFile];
          }
          if (!fs.existsSync(projectInfo.directory + projectInfo.outputDirectory)) {
-             console.log(!fs.exists(projectInfo.directory + projectInfo.outputDirectory));
              fs.mkdirSync(projectInfo.directory + projectInfo.outputDirectory);
          }
+         command += projectInfo.arguments;
          command += " -o " + projectInfo.directory + projectInfo.outputDirectory + "/" + projectInfo.name + ".html";
          console.log(command);
+         console.log("*************************************************");
+         process.stdout.write("Building " + projectInfo.name);
+         console.log("These source files will be built:");
+         for (fileNr in listOfSrcFiles)
+         {
+             console.log(listOfSrcFiles[fileNr]);
+         }
+         console.log("*************************************************");
          exec(command, function (error, stdout, stderr) {
              console.log(stdout);
              console.log(stderr);

@@ -53,8 +53,18 @@ module.exports.parseFile = function parseFile(fileName,lines)
         {
             _project.src.push(lines[lineNr].replace("UseSrcFolder:", ""));
         }
+        if (lines[lineNr].substring(0, 17) == "UseIncludeFolder:") {
+            _project.arguments += " -I" + _project.directory + "/" +lines[lineNr].replace("UseIncludeFolder:", "") + " ";
+        }
+        if (lines[lineNr].substring(0, 11) == "UseSrcFile:") {
+            _project.src.push(lines[lineNr].replace("UseSrcFile:", ""));
+        }
         if (lines[lineNr].substring(0, 13) == "OutputFolder:") {
             _project.outputDirectory = lines[lineNr].replace("OutputFolder:", "");
+        }
+        if (lines[lineNr].substring(0, 24) == "AdditionalCompilerFlags:") {
+            _project.arguments = lines[lineNr].replace("AdditionalCompilerFlags:", " ");
+            _project.arguments += " ";
         }
     }
     return _project;

@@ -1,7 +1,10 @@
-#include<iostream>
+#include"greeter.h"
 
 int main()
 {
-std::cout << "Hello World\n";
-return 0;
+	auto greeter = new Greeter();
+	greeter->greet("World");
+	greeter->greet("User");
+	delete greeter;
+	return 0;
 }
