@@ -90,8 +90,10 @@ function main()
          }
          command += projectInfo.arguments;
          command += " -o " + projectInfo.directory + projectInfo.outputDirectory + "/" + projectInfo.name + ".html";
+         console.log("\n");
          console.log("*************************************************");
-         process.stdout.write("Building " + projectInfo.name);
+         console.log("Building " + projectInfo.name);
+         console.log("The " + (projectInfo.typeOfSrc == "C++11" ? "em++" : "emcc") + " compiler is active.");
          console.log("These source files will be built:");
          for (fileNr in listOfSrcFiles)
          {
@@ -102,24 +104,29 @@ function main()
              console.log(stdout);
              console.log(stderr);
              if (error)
-                 console.log(error);
-         });
-         if(process.argv[3])
-         {
-             if(process.argv[3].replace(" ","") == "-run")
              {
-                 console.log("*************************************");
-                 console.log("Running " + projectInfo.name);
-                 exec((process.platform === 'win32' ? "start" : "") + " emrun " + projectInfo.directory + projectInfo.outputDirectory + "/" + projectInfo.name + ".html",
-                     function (error, stdout, stderr) {
-                        console.log(stdout);
-                        console.log(stderr);
-                        if (error)
-                           console.log(error);
-                     });
-                 console.log("*************************************");
+                 console.log(error);
              }
-         }
+             else
+             {
+                 if(process.argv[3])
+                 {
+                     if(process.argv[3].replace(" ","") == "-run")
+                     {
+                         console.log("*************************************************");
+                         console.log("Running " + projectInfo.name);
+                         var run = exec((process.platform === 'win32' ? "start emrun " : ( process.platform === 'linux' ? "firefox " : "open ")) + projectInfo.directory + projectInfo.outputDirectory + "/" + projectInfo.name + ".html",
+                             function (error, stdout, stderr) {
+                                console.log(stdout);
+                                console.log(stderr);
+                                if (error)
+                                   console.log(error);
+                             });
+                         console.log("*************************************************");
+                     }
+                 }
+              }
+         });
     }
 }
 
