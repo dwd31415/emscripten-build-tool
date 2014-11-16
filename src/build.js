@@ -115,12 +115,25 @@ function main()
                      {
                          console.log("*************************************************");
                          console.log("Running " + projectInfo.name);
-                         var run = exec((process.platform === 'win32' ? "start emrun " : ( process.platform === 'linux' ? "firefox " : "open ")) + projectInfo.directory + projectInfo.outputDirectory + "/" + projectInfo.name + ".html",
+                         var run = exec((process.platform === 'win32' ? "start " : ( process.platform === 'linux' ? "firefox " : "open ")) + projectInfo.directory + projectInfo.outputDirectory + "/" + projectInfo.name + ".html",
                              function (error, stdout, stderr) {
                                 console.log(stdout);
                                 console.log(stderr);
                                 if (error)
                                    console.log(error);
+                             });
+                         console.log("*************************************************");
+                     }
+                     if (process.argv[3].replace(" ", "") == "-emrun") {
+                         console.log("*************************************************");
+                         console.log("Running " + projectInfo.name + " with emrun");
+                         console.log("Emrun will block this termianl, you will have to force close it.");
+                         var run = exec("emrun " + projectInfo.directory + projectInfo.outputDirectory + "/" + projectInfo.name + ".html",
+                             function (error, stdout, stderr) {
+                                 console.log(stdout);
+                                 console.log(stderr);
+                                 if (error)
+                                     console.log(error);
                              });
                          console.log("*************************************************");
                      }
