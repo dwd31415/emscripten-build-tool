@@ -50,29 +50,36 @@ function main()
     }
     else {
          var data = fs.readFileSync(projectFileName,encoding="utf-8");
+         //The file could not be loaded
          if (!data)
          {
              console.log("The project build file is not existing or can not be opened. For more information please visit emscripten-build-tool.github.io");
              return;
          }
          var lines = data.toString().split(endOfLine);
+         //Calls the parser(parser.js), it returns a object of the type project(parser.js)
          projectInfo = parseFile(projectFileName,lines);
          var listOfSrcFiles = [];
          for (index in projectInfo.src)
          {
-
+             //Is the path from the source list a directory?
              if (fs.lstatSync(projectInfo.directory + projectInfo.src[index]).isDirectory()) {
+                 //Getting a list of all files in the directory
                  var files = fs.readdirSync(projectInfo.directory + projectInfo.src[index]);
                  for (fileNr in files) {
+                     //Is the file a valid source file?
                      if (files[fileNr].endsWith(projectInfo.srcSuffix)) {
+                         //Added the file with its complete path to the "to compile" list
                          listOfSrcFiles.push(projectInfo.src[index] + "/" + files[fileNr]);
                      }
                  }
              }
              else {
+                 //If the path is not a directory it is a .c/.cpp file or a library and can be added to the "to compile" list directly
                  listOfSrcFiles.push(projectInfo.src[index]);
              }
          }
+         //This variable shall store the command, that will eventually compile the project
          var command = "";
          if(projectInfo.typeOfSrc == "C++11")
          {
@@ -81,14 +88,18 @@ function main()
          if (projectInfo.typeOfSrc == "C99") {
              command += "emcc ";
          }
+         //Adding the "to compile" list to the command
          for(numberOfFile in listOfSrcFiles)
          {
              command += projectInfo.directory + listOfSrcFiles[numberOfFile] + " ";
          }
+         //Does the output folder already exist?
          if (!fs.existsSync(projectInfo.directory + projectInfo.outputDirectory)) {
              fs.mkdirSync(projectInfo.directory + projectInfo.outputDirectory);
          }
+         //Add user specific compiler flags to the command (This also adds the "-I"s for include paths to the command)
          command += projectInfo.arguments;
+         //Adding information about the output file to the compiler.                                                           "If it is a library, the suffix is .bc"
          command += " -o " + projectInfo.directory + projectInfo.outputDirectory + "/" + projectInfo.name + ( projectInfo.isLibrary ? ".bc" : ".html");
          console.log("\n");
          console.log("*************************************************");
@@ -100,21 +111,27 @@ function main()
              console.log(listOfSrcFiles[fileNr]);
          }
          console.log("*************************************************");
+         //Eventually executing the command
          exec(command, function (error, stdout, stderr) {
+             //Printing out the compiler output 
              console.log(stdout);
+             //Printing out the compiler error report
              console.log(stderr);
              if (error)
              {
+                 //Printing out why the command failed
                  console.log(error);
              }
              else
              {
+                 //Shall the generated .html if be run using the local browser(firefox on linux)?
                  if(process.argv[3] && !projectInfo.isLibrary)
                  {
                      if(process.argv[3].replace(" ","") == "-run")
                      {
                          console.log("*************************************************");
                          console.log("Running " + projectInfo.name);
+                         //Starting the browser
                          var run = exec((process.platform === 'win32' ? "start " : ( process.platform === 'linux' ? "firefox " : "open ")) + projectInfo.directory + projectInfo.outputDirectory + "/" + projectInfo.name + ".html",
                              function (error, stdout, stderr) {
                                 console.log(stdout);
@@ -124,10 +141,12 @@ function main()
                              });
                          console.log("*************************************************");
                      }
+                     //Shall the generated .html if be run using emrun?
                      if (process.argv[3].replace(" ", "") == "-emrun") {
                          console.log("*************************************************");
                          console.log("Running " + projectInfo.name + " with emrun");
                          console.log("Emrun will block this termianl, you will have to force close it.");
+                         //Starting emrun
                          var run = exec("emrun " + projectInfo.directory + projectInfo.outputDirectory + "/" + projectInfo.name + ".html",
                              function (error, stdout, stderr) {
                                  console.log(stdout);
