@@ -1,1 +1,1 @@
-call node src/build.js %*
+call node %~dp0/src/build.js %*
