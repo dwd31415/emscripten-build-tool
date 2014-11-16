@@ -47,7 +47,7 @@ module.exports.parseFile = function parseFile(fileName,lines)
         {
             _project.name = lines[lineNr].replace("Name:", "");
         }
-        if (lines[lineNr].indexOf("IsC++:True") == 0) {
+        if (lines[lineNr] == "IsC++:True") {
             _project.typeOfSrc = "C++11";
            _project.srcSuffix = "cpp";
         }

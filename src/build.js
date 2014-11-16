@@ -104,6 +104,22 @@ function main()
              if (error)
                  console.log(error);
          });
+         if(process.argv[3])
+         {
+             if(process.argv[3].replace(" ","") == "-run")
+             {
+                 console.log("*************************************");
+                 console.log("Running " + projectInfo.name);
+                 exec((process.platform === 'win32' ? "start" : "") + " emrun " + projectInfo.directory + projectInfo.outputDirectory + "/" + projectInfo.name + ".html",
+                     function (error, stdout, stderr) {
+                        console.log(stdout);
+                        console.log(stderr);
+                        if (error)
+                           console.log(error);
+                     });
+                 console.log("*************************************");
+             }
+         }
     }
 }
 
