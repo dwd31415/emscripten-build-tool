@@ -43,30 +43,35 @@ module.exports.parseFile = function parseFile(fileName,lines)
     for (lineNr in lines) {
         lines[lineNr] = lines[lineNr].replace("\r", "");
         lines[lineNr] = lines[lineNr].replace("\n", "");
-        if(lines[lineNr].substring(0,5) == "Name:")
-        {
-            _project.name = lines[lineNr].replace("Name:", "");
-        }
-        if (lines[lineNr] == "IsC++:True") {
-            _project.typeOfSrc = "C++11";
-           _project.srcSuffix = "cpp";
-        }
-        if (lines[lineNr].substring(0,13) == "UseSrcFolder:")
-        {
-            _project.src.push(lines[lineNr].replace("UseSrcFolder:", ""));
-        }
-        if (lines[lineNr].substring(0, 17) == "UseIncludeFolder:") {
-            _project.arguments += " -I" + _project.directory + "/" +lines[lineNr].replace("UseIncludeFolder:", "") + " ";
-        }
-        if (lines[lineNr].substring(0, 11) == "UseSrcFile:") {
-            _project.src.push(lines[lineNr].replace("UseSrcFile:", ""));
-        }
-        if (lines[lineNr].substring(0, 13) == "OutputFolder:") {
-            _project.outputDirectory = lines[lineNr].replace("OutputFolder:", "");
-        }
-        if (lines[lineNr].substring(0, 24) == "AdditionalCompilerFlags:") {
-            _project.arguments = lines[lineNr].replace("AdditionalCompilerFlags:", " ");
-            _project.arguments += " ";
+        if (!lines[lineNr].indexOf("#") == 0) {
+            if (lines[lineNr].substring(0, 5) == "Name:") {
+                _project.name = lines[lineNr].replace("Name:", "");
+            }
+            else if (lines[lineNr] == "IsC++:True") {
+                _project.typeOfSrc = "C++11";
+                _project.srcSuffix = "cpp";
+            }
+            else if (lines[lineNr].substring(0, 13) == "UseSrcFolder:") {
+                _project.src.push(lines[lineNr].replace("UseSrcFolder:", ""));
+            }
+            else if (lines[lineNr].substring(0, 17) == "UseIncludeFolder:") {
+                _project.arguments += " -I" + _project.directory + "/" + lines[lineNr].replace("UseIncludeFolder:", "") + " ";
+            }
+            else if (lines[lineNr].substring(0, 11) == "UseSrcFile:") {
+                _project.src.push(lines[lineNr].replace("UseSrcFile:", ""));
+            }
+            else if (lines[lineNr].substring(0, 13) == "OutputFolder:") {
+                _project.outputDirectory = lines[lineNr].replace("OutputFolder:", "");
+            }
+            else if (lines[lineNr].substring(0, 24) == "AdditionalCompilerFlags:") {
+                _project.arguments = lines[lineNr].replace("AdditionalCompilerFlags:", " ");
+                _project.arguments += " ";
+            }
+            else {
+                var lineNumber = +1 + +lineNr;
+                console.log("Unsupported command: (Line " + lineNumber + ") " + lines[lineNr]);
+                process.exit(1);
+            }
         }
     }
     return _project;
