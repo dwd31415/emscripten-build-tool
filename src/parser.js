@@ -26,8 +26,8 @@ THE SOFTWARE.
 var path = require("path");
 
 var project= {
-name: "",
-directory: "",
+name: "UnnamedProject",
+directory: ".",
 outputDirectory: "html",
 src: [],
 srcSuffix: "c",
@@ -41,6 +41,8 @@ module.exports.parseFile = function parseFile(fileName,lines)
     var _project = Object.create(project);
     _project.directory = path.dirname(fileName) + "/";
     for (lineNr in lines) {
+        lines[lineNr] = lines[lineNr].replace("\r", "");
+        lines[lineNr] = lines[lineNr].replace("\n", "");
         if(lines[lineNr].substring(0,5) == "Name:")
         {
             _project.name = lines[lineNr].replace("Name:", "");

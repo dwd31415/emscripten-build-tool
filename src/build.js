@@ -25,6 +25,7 @@ THE SOFTWARE.
 
 var fs = require('fs');
 var exec = require('child_process').exec;
+var endOfLine = require('os').EOL;
 var project = require('./parser.js').project;
 var parseFile = require('./parser.js').parseFile;
 
@@ -54,11 +55,12 @@ function main()
              console.log("The project build file is not existing or can not be opened. For more information please visit emscripten-build-tool.github.io");
              return;
          }
-         var lines = data.toString().split("\n");
+         var lines = data.toString().split(endOfLine);
          projectInfo = parseFile(projectFileName,lines);
          var listOfSrcFiles = [];
          for (index in projectInfo.src)
          {
+
              if (fs.lstatSync(projectInfo.directory + projectInfo.src[index]).isDirectory()) {
                  var files = fs.readdirSync(projectInfo.directory + projectInfo.src[index]);
                  for (fileNr in files) {
@@ -81,14 +83,13 @@ function main()
          }
          for(numberOfFile in listOfSrcFiles)
          {
-             command += projectInfo.directory + listOfSrcFiles[numberOfFile];
+             command += projectInfo.directory + listOfSrcFiles[numberOfFile] + " ";
          }
          if (!fs.existsSync(projectInfo.directory + projectInfo.outputDirectory)) {
              fs.mkdirSync(projectInfo.directory + projectInfo.outputDirectory);
          }
          command += projectInfo.arguments;
          command += " -o " + projectInfo.directory + projectInfo.outputDirectory + "/" + projectInfo.name + ".html";
-         console.log(command);
          console.log("*************************************************");
          process.stdout.write("Building " + projectInfo.name);
          console.log("These source files will be built:");

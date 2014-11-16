@@ -2,4 +2,6 @@ Name:Example1
 IsC++:True
 AdditionalCompilerFlags:-std=c++11
 UseIncludeFolder:include
+UseIncludeFolder:include
 UseSrcFolder:src
+UseSrcFolder:implementation
