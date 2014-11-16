@@ -34,7 +34,7 @@ if (typeof String.prototype.endsWith !== 'function') {
     };
 }
 
-var build = 0.1;
+var build = 0.5;
 
 //Holds all relevant details about the project
 var projectInfo;
@@ -80,7 +80,7 @@ function main()
          {
              command += projectInfo.directory + listOfSrcFiles[numberOfFile];
          }
-         if (!fs.exists(projectInfo.directory + projectInfo.outputDirectory)) {
+         if (!fs.existsSync(projectInfo.directory + projectInfo.outputDirectory)) {
              console.log(!fs.exists(projectInfo.directory + projectInfo.outputDirectory));
              fs.mkdirSync(projectInfo.directory + projectInfo.outputDirectory);
          }
