@@ -35,7 +35,7 @@ if (typeof String.prototype.endsWith !== 'function') {
     };
 }
 
-var build = 0.91;
+var build = 0.92;
 
 //Holds all relevant details about the project
 var projectInfo;
