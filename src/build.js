@@ -35,13 +35,19 @@ if (typeof String.prototype.endsWith !== 'function') {
     };
 }
 
-var build = 0.8;
+var build = 0.91;
 
 //Holds all relevant details about the project
 var projectInfo;
 
 function main()
 {
+    console.log("                              _       _                   _           _ _     _       _              _\n"+
+"  ___ _ __ ___  ___  ___ _ __(_)_ __ | |_ ___ _ __       | |__  _   _(_| | __| |     | |_ ___   ___ | |\n"+
+" / _ | '_ ` _ \\/ __|/ __| '__| | '_ \\| __/ _ | '_ \\ _____| '_ \\| | | | | |/ _` |_____| __/ _ \\ / _ \\| |\n"+
+"|  __| | | | | \\__ | (__| |  | | |_) | ||  __| | | |_____| |_) | |_| | | | (_| |_____| || (_) | (_) | |\n"+
+" \\___|_| |_| |_|___/\\___|_|  |_| .__/ \\__\\___|_| |_|     |_.__/ \\__,_|_|_|\\__,_|      \\__\\___/ \\___/|_|\n"+
+"                               |_|      ");
     console.log("Emscripten Build Tool by Adrian Dawid. Build:" + build);
     var projectFileName;
     projectFileName = process.argv[2];
@@ -101,7 +107,7 @@ function main()
          command += projectInfo.arguments;
          //Adding information about the output file to the compiler.                                                           "If it is a library, the suffix is .bc"
          command += " -o " + projectInfo.directory + projectInfo.outputDirectory + "/" + projectInfo.name + ( projectInfo.isLibrary ? ".bc" : ".html");
-         console.log("\n");
+         console.log("\\n");
          console.log("*************************************************");
          console.log("Building " + projectInfo.name);
          console.log("The " + (projectInfo.typeOfSrc == "C++11" ? "em++" : "emcc") + " compiler is active.");
@@ -113,7 +119,7 @@ function main()
          console.log("*************************************************");
          //Eventually executing the command
          exec(command, function (error, stdout, stderr) {
-             //Printing out the compiler output 
+             //Printing out the compiler output
              console.log(stdout);
              //Printing out the compiler error report
              console.log(stderr);
