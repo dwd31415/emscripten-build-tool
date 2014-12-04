@@ -87,7 +87,7 @@ module.exports.parseFile = function parseFile(fileName,lines)
                 _project.arguments += " ";
             }
             //Or is it no supported command at all?
-            else {
+            else if (lines[lineNr] != ""){
                 //Calculate the line number for the error message.(The many pluses are required because of js strange way of dealing with variable types!)
                 var lineNumber = +1 + +lineNr;
                 console.log("Unsupported command: (Line " + lineNumber + ") " + lines[lineNr]);
